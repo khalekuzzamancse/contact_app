@@ -2,12 +2,10 @@ import 'package:contact_app/core/ui/core_ui.dart';
 import 'package:contact_app/features/_core/core_ui.dart' hide TextView;
 import 'package:contact_app/features/_core/mediator.dart';
 import 'package:contact_app/features/_core/ui/_logo.dart';
-import 'package:contact_app/features/contact_list/presentation/contact_screen.dart';
+import 'package:contact_app/features/contact_list/presentation/ui/contact_screen.dart';
 import 'package:flutter/material.dart';
-
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
-
   @override
   State<WelcomeScreen> createState() => _WelcomeScreenState();
 }
@@ -77,14 +75,19 @@ class _BottomPart extends StatelessWidget {
             ),
           ),
           SizedBox(height: 20),
-          ButtonView(
-            label: 'Get Started',
-            onPressed: (){
-              AppMediator.setWelcomeScreenShowed();
-              Navigator.push(context, MaterialPageRoute(builder: (context)=>ContactScreen()));
-            },
-            forground:ThemeFactory.theme.colorPrimary,
-            background:Colors.white ,
+          Container(
+            constraints: BoxConstraints(
+              maxWidth: 400
+            ),
+            child: ButtonView(
+              label: 'Get Started',
+              onPressed: (){
+                AppMediator.setWelcomeScreenShowed();
+                context.push(ContactScreen());
+              },
+              forground:ThemeFactory.theme.colorPrimary,
+              background:Colors.white ,
+            ),
           )
         ],
       ),

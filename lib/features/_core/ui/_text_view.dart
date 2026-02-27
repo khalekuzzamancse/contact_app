@@ -7,7 +7,7 @@ class TextBodySmall extends StatelessWidget {
   const TextBodySmall(this.text,{super.key,this.color,this.size=14,this.weight=FontWeight.w400,this.letterspace});
   @override
   Widget build(BuildContext context) {
-    return TextView(text,color: color,fontSize: size,weight: weight,letterSpace: letterspace,);
+    return TextView(text,color: color,fontSize: size,fontWeight: weight,letterSpace: letterspace,);
   }
 }
 ///The core text view for feature layer
@@ -15,9 +15,9 @@ class TextBodySmall extends StatelessWidget {
 class TextView extends StatelessWidget {
   final String text; final Color? color;
   final double? fontSize,letterSpace;
-  final FontWeight? weight;
+  final FontWeight? fontWeight;
   final TextOverflow? overflow;
-  const TextView(this.text,{super.key,this.color,this.fontSize,this.weight,this.letterSpace,
+  const TextView(this.text,{super.key,this.color,this.fontSize,this.fontWeight,this.letterSpace,
    this.overflow});
   @override
   Widget build(BuildContext context) {
@@ -25,7 +25,7 @@ class TextView extends StatelessWidget {
     TextStyle(
       overflow: overflow,
       color: color,fontFamily: ThemeFactory.theme.font,
-        fontSize: fontSize,fontWeight: weight,
+        fontSize: fontSize,fontWeight: fontWeight,
       letterSpacing: letterSpace,
     ));
   }
