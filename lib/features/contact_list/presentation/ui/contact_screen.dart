@@ -1,11 +1,14 @@
 import 'dart:async';
+
 import 'package:contact_app/core/ui/core_ui.dart' hide TextView;
 import 'package:contact_app/features/_core/di.dart';
 import 'package:contact_app/features/_core/ui/_image_factory.dart';
+import 'package:contact_app/features/contact_create/save_contact.dart';
 import 'package:contact_app/features/contact_list/domain/contact_repository.dart';
 import 'package:contact_app/features/contact_list/presentation/logic/contact_controller.dart';
-import 'package:flutter/material.dart';
-import '../../../_core/core_ui.dart' show TextView, ThemeFactory, ButtonView, TextFieldView, DropdownView, PhoneNumberPicker;
+import 'package:flutter/material.dart' hide showBottomSheet;
+
+import '../../../_core/core_ui.dart' show TextView, ThemeFactory, ButtonView;
 
 class ContactScreen extends StatelessWidget {
   const ContactScreen({super.key});
@@ -17,7 +20,7 @@ class ContactScreen extends StatelessWidget {
 }
 
 class _ContactScreen extends StatefulWidget {
-  const _ContactScreen({super.key});
+  const _ContactScreen();
   @override
   State<_ContactScreen> createState() => _ContactScreenState();
 }
@@ -56,7 +59,7 @@ class _ContactScreenState extends State<_ContactScreen> with LoadingStateMixin {
         backgroundColor: Colors.white,
         floatingActionButton: GestureDetector(
           onTap: (){
-            _showBottomSheet(context);
+            showBottomSheet(context);
           },
             child: SvgView(ImageFactory.fab)),
         body: isEmpty?Center(child: Padding(
@@ -101,12 +104,17 @@ class _ContactScreenState extends State<_ContactScreen> with LoadingStateMixin {
       ),
     );
   }
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 }
 class _ContactListHorizontal extends StatefulWidget {
   final ContactController controller;
   final double contentPadding;
   final Function(String) onCategoryChanged;
-  const _ContactListHorizontal({super.key, required this.contentPadding, required this.controller, required this.onCategoryChanged});
+  const _ContactListHorizontal({required this.contentPadding, required this.controller, required this.onCategoryChanged});
   @override
   State<_ContactListHorizontal> createState() => _ContactListHorizontalState();
 }
@@ -168,7 +176,7 @@ class _ContactListHorizontalState extends State<_ContactListHorizontal> {
 }
 class _ContactListVertical extends StatefulWidget {
   final ContactController controller;
-  const _ContactListVertical({super.key, required this.controller});
+  const _ContactListVertical({required this.controller});
 
   @override
   State<_ContactListVertical> createState() => _ContactListVerticalState();
@@ -207,7 +215,7 @@ class _ContactListVerticalState extends State<_ContactListVertical> {
 class _ContactView extends StatelessWidget {
   final ContactModel model;
 
-  const _ContactView({super.key, required this.model});
+  const _ContactView({required this.model});
 
   @override
   Widget build(BuildContext context) {
@@ -237,7 +245,7 @@ class _CategoryView extends StatelessWidget {
   final CategoryModel model;
   final isSelected;
   final VoidCallback onClick;
-  const _CategoryView({super.key, required this.model, this.isSelected = false,required this.onClick});
+  const _CategoryView({required this.model, this.isSelected = false,required this.onClick});
 
   @override
   Widget build(BuildContext context) {
@@ -275,7 +283,7 @@ class _TopBar extends StatefulWidget {
   final ContactController controller;
   final Function(String) onQueryChanged;
   final VoidCallback onDismissSearch;
-  const _TopBar({super.key, required this.controller, required this.onQueryChanged, required this.onDismissSearch});
+  const _TopBar({required this.controller, required this.onQueryChanged, required this.onDismissSearch});
 
   @override
   State<_TopBar> createState() => _TopBarState();
@@ -342,7 +350,7 @@ class _SelectableText extends StatelessWidget {
   final String label;
   final VoidCallback onClick;
   final bool selected;
-  const _SelectableText({super.key, required this.selected, required this.label, required this.onClick});
+  const _SelectableText({required this.selected, required this.label, required this.onClick});
 
   @override
   Widget build(BuildContext context) {
@@ -464,82 +472,13 @@ class _SearchBarState extends State<SearchBar> {
     );
   }
 }
-// Main UI
-class SaveContactPage extends StatefulWidget {
-  @override
-  State<SaveContactPage> createState() => _SaveContactPageState();
-}
-class _SaveContactPageState extends State<SaveContactPage> {
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
-  final TextEditingController designationController = TextEditingController();
-  final TextEditingController companyController = TextEditingController();
-  final TextEditingController relationController = TextEditingController();
 
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.white,
-      child: Column(
-          mainAxisSize: MainAxisSize.min,
-        children: [
-          SpacerVertical(24),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                TextFieldView(hintText: 'Name', controller: nameController),
-                PhoneNumberPicker(
-                    onCountryCodeChanged: (_ ) {  },
-                    onNumberChanged: (_ ) {  },
-                  onFullNumberChanged: (_ ) {  },),
-                TextFieldView(
-                    hintText: 'Designation', controller: designationController),
-                TextFieldView(hintText: 'Company', controller: companyController),
-                DropdownView(
-                  hintText: 'Category',
-                  selectedValue:'Relation',
-                  items: ['Relation', 'Family', 'Work', 'Other'],
-                  onChanged: (value) {
-                  },
-                ),
-                SizedBox(height: 20),
-                ButtonView(
-                  label: 'Save Contact',
-                  background: ThemeFactory.theme.colorPrimary,
-                  forground: Colors.white,
-                  onPressed: () {
-                    showSnackBar('Not implement yet');
-                    context.pop();
-                  },
-                ),
-                SpacerVertical(32),
-                ButtonView(
-                  label: 'Cancel',
-                  background: Colors.white,
-                  labelColor: Color(0xFF717978),
-                  forground: ThemeFactory.theme.colorPrimary,
-                  borderColor: Color(0xFF717978),
-                  onPressed: () {
-                    context.pop();
-                  },
-                )
-              ],
-            ),
-          )
-        ]
-      ),
-    );
-  }
-}
 
 
 class InitialsAvatar extends StatelessWidget {
   final double radius;
   final String name;
-  const InitialsAvatar({Key? key, required this.name,required this.radius}) : super(key: key);
+  const InitialsAvatar({super.key, required this.name,required this.radius});
 
   @override
   Widget build(BuildContext context) {
@@ -563,10 +502,9 @@ class _ContactProvider extends InheritedWidget {
    final ContactController controller;
 
   const _ContactProvider({
-    Key? key,
     required this.controller,
-    required Widget child,
-  }) : super(key: key, child: child);
+    required super.child,
+  });
 
   static ContactController controllerOrThrow(BuildContext context) {
     final _ContactProvider? result =
@@ -581,7 +519,7 @@ class _ContactProvider extends InheritedWidget {
 }
 
 class NoContactView extends StatelessWidget {
-  const NoContactView({Key? key}) : super(key: key);
+  const NoContactView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -622,42 +560,11 @@ class NoContactView extends StatelessWidget {
                 background: ThemeFactory.theme.colorPrimary,
                 forground: Colors.white,
                 onPressed: (){
-                  _showBottomSheet(context);
+                  showBottomSheet(context);
                 })
           ],
         ),
       ),
     );
   }
-}
-void _showBottomSheet(BuildContext context){
-  showModalBottomSheet(
-    context: context,
-    isScrollControlled: true,
-    backgroundColor: Colors.white,
-    useSafeArea: true,
-    builder: (context) {
-      return Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SpacerVertical(32),
-          Container(
-            height: 30,
-            color: Colors.white,
-            child: Center(
-              child: Container(
-                height: 10,
-                width: 250,
-                decoration: BoxDecoration(
-                  color:  Color(0xFF8C8C8C).withValues(alpha: 0.6),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            ),
-          ),
-          SaveContactPage(),
-        ],
-      );
-    },
-  );
 }

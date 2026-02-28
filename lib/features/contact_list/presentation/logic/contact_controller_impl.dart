@@ -57,5 +57,12 @@ class ContactControllerImpl implements ContactController{
     _selectedCategory=category;
   }
 
+  @override
+  void dispose() {
+    _contacts.close();
+    _categories.close();
+
+  }
+
 
 }

@@ -5,4 +5,6 @@ abstract interface class ContactController{
   void onCategoryChanged(String category);
   Future<void> read({String? category});
   Future<void> query({required String query});
+  void dispose();
+
 }

@@ -19,7 +19,7 @@
 
 * **Splash** and **Onboarding Screen**
 * **Contact View** : Read all contact, read by category
-* **Search Contact** : Search by category and name
+* **Search Contact** : Search by category and name or number
 * **Create Contact** : UI created but functionality not implemented yet
 
 
@@ -29,8 +29,8 @@
 
 | Description       | Link                            |
 |:------------------|:--------------------------------|
-| **Video Preview** | \[https://youtu.be/gZka3n9K2rY] |
-| **APK Download**  | \[download the `android-release.apk`from this current directory]                     |
+| **Video Preview** | \[https://youtu.be/lSj3WwGPXfY] |
+| **APK Download**  | \[download the `app-release.apk`from this current directory]                     |
 | **Latest Code and App**   | \[ checkout to the `dev` branch]  |
 ---
 
@@ -72,7 +72,7 @@ Soon, different branches will be available that uses a different state managemen
 <img src="-docs/contact_screen_no_data.png" alt="Task Filter 2" width="30%" />
 <img src="-docs/contact_screen_with_data.png" alt="Date Picker" width="30%" />
 
-Note: If for a contact or category image does not exits show a placeholder and if for any contact name does not exits, UI ignore them
+Note: If for a contact or category image does not exits show a placeholder instead and if for any contact name does not exits, UI ignore them
 
 ### **Search**
 <img src="-docs/search_focused.png" alt="Task Sort" width="30%" />
