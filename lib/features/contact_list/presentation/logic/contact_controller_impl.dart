@@ -37,11 +37,16 @@ class ContactControllerImpl implements ContactController{
   Future<void> read({String? category}) async{
     try{
       if(category==null){
+        //clear existing
+        _contacts.add([]);
+        _categories.add([]);
         final response=await repository.readOrThrow();
         _contacts.add(response.second);
         _categories.add(response.first);
       }
       else{
+        //clear existing
+        _contacts.add([]);
         final response=await repository.readContactsOrThrow(category);
         _contacts.add(response);
       }

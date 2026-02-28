@@ -92,7 +92,10 @@ class _ContactScreenState extends State<_ContactScreen> with LoadingStateMixin {
                  stopLoading();
                }
              ),
-              Expanded(
+              (!isLoading&&contacts.isEmpty)?Padding(
+                padding: const EdgeInsets.only(top: 40,left: 16,right: 16),
+                child: NoContactView(),
+              ): Expanded(
                 child:Padding(
                   padding:  EdgeInsets.symmetric(horizontal: padding),
                   child: _ContactListVertical(controller: controller),

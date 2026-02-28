@@ -29,7 +29,7 @@
 
 | Description       | Link                            |
 |:------------------|:--------------------------------|
-| **Video Preview** | \[https://youtu.be/lSj3WwGPXfY] |
+| **Video Preview** | \[https://youtu.be/z_JKw1rireA] |
 | **APK Download**  | \[download the `app-release.apk`from this current directory]                     |
 | **Latest Code and App**   | \[ checkout to the `dev` branch]  |
 ---
