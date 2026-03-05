@@ -4,70 +4,83 @@ import 'package:contact_app/features/contact_list/domain/contact_repository.dart
 import 'contact_controller.dart';
 import 'package:rxdart/rxdart.dart';
 
-class ContactControllerImpl implements ContactController{
+class ContactControllerImpl implements ContactController {
+  late  ContactUiState last=ContactUiState.toEmpty();
   final ContactRepository repository;
+  @override
+  late final initial=last;
+  late final _state = BehaviorSubject<ContactUiState>.seeded(last);
   ContactControllerImpl(this.repository);
-  late final tag=runtimeType.toString();
-  final _contacts=BehaviorSubject<List<ContactModel>>.seeded(List.empty());
-  final _categories=BehaviorSubject<List<CategoryModel>>.seeded(List.empty());
-  String? _selectedCategory;
   @override
-  Stream<List<CategoryModel>> get categories=>_categories.stream;
+  Stream<ContactUiState> get state => _state.stream;
   @override
-  Stream<List<ContactModel>> get contacts => _contacts.stream;
-  @override
-  Future<void> query({required String query}) async{
-    try{
-      final category=_selectedCategory;
-      Logger.on(tag, 'category:$category,query:$query');
-      if(category==null){
-        return;
-      }
-      final response=await repository.queryOrThrow(category:category,query: query);
-      _contacts.add(response.second);
-      _categories.add(response.first);
-    }
-    catch(e) {
+  ContactUiState errorToState(Object? e) {
+    if(e!=null){
       ErrorController.showSnackBarOrSkip(e);
-      Logger.on(tag, 'exception:$e');
     }
+    return last;
   }
-
   @override
-  Future<void> read({String? category}) async{
+  void onSelectCategory(int category) {
+    _state.add(updatedState(selected: category));
+  }
+  @override
+  Future<void> read({String? category}) async {
     try{
       if(category==null){
         //clear existing
-        _contacts.add([]);
-        _categories.add([]);
+        _state.add(updatedState(isLoading: true));
         final response=await repository.readOrThrow();
-        _contacts.add(response.second);
-        _categories.add(response.first);
+        _state.add(updatedState(isLoading: false, contacts: response.second, categories: response.first));
       }
       else{
         //clear existing
-        _contacts.add([]);
+        _state.add(updatedState(isLoading: true));
         final response=await repository.readContactsOrThrow(category);
-        _contacts.add(response);
+        last=last.copyWith(isLoading: false, contacts: response);
+        _state.add(updatedState(isLoading: false,contacts: response));
       }
     }
     catch(e){
+      _state.add(updatedState(isLoading: false));
       ErrorController.showSnackBarOrSkip(e);
-      Logger.on(tag, 'exception:$e');
+    }
+  }
+  @override
+  Future<void> query({required String query}) async {
+    try{
+      final category=categoryOrNull();
+      if(category==null){return;}
+      _state.add(updatedState(isLoading: true));
+      final response=await repository.queryOrThrow(category:category,query: query);
+      _state.add(updatedState(isLoading: false, contacts: response.second, categories: response.first));
+    }
+    catch(e) {
+      _state.add(updatedState(isLoading: false));
+      ErrorController.showSnackBarOrSkip(e);
     }
   }
 
-  @override
-  void onCategoryChanged(String category) {
-    _selectedCategory=category;
+  String? categoryOrNull(){
+    try{
+      return last.categories[last.selectedCategory!].name;
+    }
+    catch(_){
+      return null;
+    }
   }
 
+  ContactUiState updatedState(
+      {List<CategoryModel>? categories,
+      List<ContactModel>? contacts,
+      String? error,
+      bool? isLoading,
+      int? selected}){
+     last=last.copyWith(categories: categories, contacts: contacts, error: error, isLoading: isLoading, selectedCategory: selected);
+    return last;
+  }
   @override
   void dispose() {
-    _contacts.close();
-    _categories.close();
-
+    _state.close();
   }
-
-
 }

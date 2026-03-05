@@ -73,7 +73,7 @@ class _SaveContactPageState extends State<SaveContactPage> {
     );
   }
 }
-void showBottomSheet(BuildContext context){
+void showAddContactSheet(BuildContext context){
   showModalBottomSheet(
     context: context,
     isScrollControlled: true,

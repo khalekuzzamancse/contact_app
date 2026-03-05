@@ -39,7 +39,8 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
       ),
-      home: showSplash?SplashScreen():(onboarded?Scaffold(body: ContactScreen()):WelcomeScreen()),);
+      home: showSplash?SplashScreen():(onboarded?Scaffold(body: ContactScreen()):WelcomeScreen())
+    );
   }
 
 }
